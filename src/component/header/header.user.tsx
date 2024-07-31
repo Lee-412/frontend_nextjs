@@ -57,6 +57,7 @@ function AppAppBar(props: any) {
         }
         else {
             const dataServer = JSON.parse(userDataString);
+            console.log(dataServer);
 
             if (dataServer.authen == 'Admin') {
                 setUserData({
@@ -97,11 +98,11 @@ function AppAppBar(props: any) {
 
 
     const handleClickSignUp = () => {
-        route.push('/signup')
+        route.push('/register')
     }
 
     const handleClickSignIn = () => {
-        route.push('/signin')
+        route.push('/login')
     }
 
 
@@ -247,7 +248,7 @@ function AppAppBar(props: any) {
                                             onClick={handleClickSignIn}
 
                                         >
-                                            Sign in
+                                            Login
                                         </Button>
                                         <Button
                                             color="primary"
@@ -255,7 +256,7 @@ function AppAppBar(props: any) {
                                             size="small"
                                             onClick={handleClickSignUp}
                                         >
-                                            Sign up
+                                            Signup
                                         </Button>
                                     </Box>
                                 </>

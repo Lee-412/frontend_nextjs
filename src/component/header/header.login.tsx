@@ -12,7 +12,7 @@ const AppHeader = () => {
     const route = useRouter();
     const [language, setLanguage] = useState("Vietnamese");
     const [openManual, setOpenManual] = useState(false);
-    const [checkLogin, setCheckLogin] = React.useState('signIn');
+    const [checkLogin, setCheckLogin] = React.useState('login');
     const pathname = usePathname()
 
     useEffect(() => {
@@ -22,14 +22,14 @@ const AppHeader = () => {
 
     const handleClickSignUp = () => {
 
-        route.push('/signup')
-        setCheckLogin('/signup')
+        route.push('/register')
+        setCheckLogin('/register')
     }
 
     const handleClickSignIn = () => {
-        setCheckLogin('/signin')
+        setCheckLogin('/login')
 
-        route.push('/signin')
+        route.push('/login')
     }
     console.log(checkLogin);
 
@@ -87,7 +87,7 @@ const AppHeader = () => {
                                 gap: 1
                             }}
                         >
-                            {checkLogin === '/signup'
+                            {checkLogin === '/register'
                                 ?
                                 <>
                                     <Button

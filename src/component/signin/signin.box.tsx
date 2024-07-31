@@ -267,8 +267,9 @@ const SinginBox = () => {
                     address: '123123',
                     authen: 'Admin'
                 }));
+
+                console.log("đăng nhập");
                 router.push('/');
-                window.location.reload();
             } else {
                 alert('Login failed. Please check your email and password.');
             }
@@ -278,7 +279,7 @@ const SinginBox = () => {
     };
 
     const handleClickSingup = () => {
-        router.push('/signup')
+        router.push('/register')
     }
 
     return (
@@ -299,7 +300,7 @@ const SinginBox = () => {
             }}
         >
             <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'black', mb: 3 }}>
-                Sign In
+                Login
             </Typography>
             <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={12}>

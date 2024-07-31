@@ -32,8 +32,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(guest)/signup",
-    "src/app/(guest)/signin"
+    "src/app/(guest)/register",
+    "src/app/(guest)/login"
   ],
   "exclude": [
     "node_modules"
