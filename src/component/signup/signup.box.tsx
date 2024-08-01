@@ -32,18 +32,8 @@ interface SnackbarState {
 const SignupBox = () => {
 
     useEffect(() => {
-        axios.get('http://localhost:8080/api/v1/test-api').then(
-            (response) => { console.log(response); }
 
-        )
 
-        // axios.post('http://localhost:8080/api/v1/register', {
-        //     firstName: 'Fred',
-        //     lastName: 'Flintstone'
-        // })
-        //     .then(function (response) {
-        //         console.log(response);
-        //     })
     }, [])
 
     const [formData, setFormData] = useState({
@@ -75,7 +65,6 @@ const SignupBox = () => {
         });
     };
 
-
     const handleClose = (
         event?: React.SyntheticEvent | Event,
         reason?: string
@@ -100,8 +89,6 @@ const SignupBox = () => {
     const handleChange = (e: any) => {
         const { name, value } = e.target;
 
-        // console.log(name, value);
-
         setFormData({
             ...formData,
             [name]: value,
@@ -123,8 +110,6 @@ const SignupBox = () => {
 
         if (!regx.test(formData.email)) {
             showSnackbar('email is invalid', 'warning')
-            console.log("check");
-
             return
         }
 
@@ -154,22 +139,28 @@ const SignupBox = () => {
         }
 
         const phonePattern = /^[0-9]+$/;
+
+        console.log(formData.phone);
+
         if (!phonePattern.test(formData.phone)) {
             showSnackbar('Phone number can only contain digits', 'warning');
             return false;
         }
 
         if (formData.password !== formData.repeatPassword) {
-            // alert('Passwords do not match.');
             showSnackbar('Passwords do not match.', 'warning')
             return;
         }
         try {
-            // Mock API call
             console.log(formData);
-
             axios.post('http://localhost:8080/api/v1/register', {
-                formData
+                username: formData.username,
+                email: formData.email,
+                password: formData.password,
+                sex: formData.sex,
+                phone: formData.phone,
+                address: formData.address
+
             }
             )
                 .then(function (response) {
@@ -178,12 +169,10 @@ const SignupBox = () => {
 
             showSnackbar('Registration successful', 'success')
             // router.push('/login');
-            // Redirect to the sign-in page after successful registration
         } catch (error) {
             console.error('Error during registration:', error);
         }
     };
-
 
     const handleClickSignIn = () => {
         router.push('/login')
