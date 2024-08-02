@@ -153,7 +153,7 @@ const SignupBox = () => {
         }
         try {
             console.log(formData);
-            axios.post('http://localhost:8080/api/v1/register', {
+            const respone = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/register`, {
                 username: formData.username,
                 email: formData.email,
                 password: formData.password,
@@ -161,13 +161,21 @@ const SignupBox = () => {
                 phone: formData.phone,
                 address: formData.address
 
+            })
+            console.log(respone.data.EC);
+            if (respone.data.EC === "0") {
+                showSnackbar(`${respone.data.EM}`, 'success')
+                router.push('/login ')
             }
-            )
-                .then(function (response) {
-                    console.log(response);
-                })
+            else {
+                if (respone.data.EC === "-1") {
+                    showSnackbar(`${respone.data.EM}`, 'warning')
 
-            showSnackbar('Registration successful', 'success')
+                }
+                else {
+                    showSnackbar(`${respone.data.EM}`, 'error')
+                }
+            }
             // router.push('/login');
         } catch (error) {
             console.error('Error during registration:', error);

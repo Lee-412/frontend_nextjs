@@ -34,13 +34,14 @@ function AppAppBar(props: any) {
         setOpen(newOpen);
     };
     const [userData, setUserData] = useState({
+        token: '',
         userID: 0,
         username: '',
         email: '',
-        avatar: '',
         phone: '',
         address: '',
-
+        groupId: 0,
+        authen: ''
     })
 
     console.log(userData);
@@ -61,12 +62,14 @@ function AppAppBar(props: any) {
 
             if (dataServer.authen == 'Admin') {
                 setUserData({
-                    userID: dataServer.userId,
-                    username: '',
-                    email: '',
-                    avatar: '',
-                    phone: '',
-                    address: '',
+                    token: 'form.jwt',
+                    userID: dataServer.userID,
+                    email: dataServer.email,
+                    username: dataServer.username,
+                    phone: dataServer.phone,
+                    address: dataServer.address,
+                    groupId: dataServer.groupId,
+                    authen: 'Admin'
                 })
             } else {
                 sessionStorage.clear();
@@ -81,13 +84,14 @@ function AppAppBar(props: any) {
             sessionStorage.clear();
             route.push('/');
             setUserData({
+                token: '',
                 userID: 0,
                 username: '',
                 email: '',
-                avatar: '',
                 phone: '',
                 address: '',
-
+                groupId: 0,
+                authen: ''
             })
         };
 

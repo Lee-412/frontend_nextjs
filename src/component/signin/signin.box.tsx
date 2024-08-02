@@ -1,222 +1,3 @@
-// 'use client'
-// import React, { useEffect, useState } from 'react';
-// import {
-//     TextField, Button, Grid, Box,
-//     InputAdornment,
-//     IconButton,
-//     FormControlLabel,
-//     Checkbox,
-//     Container
-// } from '@mui/material';
-// import LockIcon from '@mui/icons-material/Lock';
-// import PersonIcon from '@mui/icons-material/Person';
-// import { Visibility, VisibilityOff } from '@mui/icons-material';
-// import { useRouter } from 'next/navigation';
-
-// import EmailIcon from '@mui/icons-material/Email';
-// const SinginBox = () => {
-
-//     const [userLoginId, setUserLoginId] = useState<number>()
-//     const [authen, setAuthen] = useState<string>()
-//     const [formData, setFormData] = useState({
-//         name: '',
-//         email: '',
-//         phone: '',
-//         password: '',
-//         address: '',
-//     });
-//     const route = useRouter();
-
-//     const [showPassword, setShowPassword] = useState(false);
-
-//     const handleShowPassword = () => {
-//         setShowPassword(!showPassword);
-//     };
-
-//     const handleChange = (e: any) => {
-//         const { name, value } = e.target;
-//         console.log(name, value);
-
-//         setFormData({
-//             ...formData,
-//             [name]: value,
-//         });
-//     };
-
-//     useEffect(() => {
-//         //console.log(userLoginId);
-//         if (userLoginId !== undefined) {
-//             if (authen === 'Admin') {
-
-//             } else {
-
-//             }
-//         }
-//     }, [userLoginId, authen])
-
-//     const handleSubmit = async (e: any) => {
-//         e.preventDefault();
-//         try {
-//             // const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/auth/local`, {
-//             //     method: 'POST',
-//             //     headers: {
-//             //         'Content-Type': 'application/json',
-//             //     },
-//             //     body: JSON.stringify({
-//             //         identifier: formData.email,
-//             //         password: formData.password,
-//             //     }),
-//             // });
-
-//             // const data = await response.json();
-//             // console.log(data.user.authen);
-//             console.log(formData);
-
-
-//             // if (
-//             //     // response.ok
-//             //     formData
-//             // ) {
-//             // console.log(data.user.id);
-//             // setUserLoginId(data.user.id);
-//             // const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_LINK_API_URL}/`)
-//             // const dataUser = await res.json();
-//             // console.log(dataUser);
-
-//             // sessionStorage.setItem('userData', JSON.stringify({
-//             //     token: data.jwt,
-//             //     user: dataUser,
-//             // }));
-
-//             // Redirect based on user role
-//             // if (data.user.authen === 'Admin') {
-//             //     //console.log(userLoginId);
-//             //     setAuthen('Admin')
-
-//             // } else {
-//             //     console.log(userLoginId);
-//             //     setAuthen('User')
-
-//             // }
-//             if (formData.email === 'leeduchht@gmail.com' && formData.password === '123456') {
-//                 sessionStorage.setItem('userData', JSON.stringify({
-//                     token: 'form.jwt',
-//                     userID: "1",
-//                     email: formData.email,
-//                     username: "test",
-//                     phone: '0123123',
-//                     address: '123123',
-//                     authen: 'Admin'
-//                 }));
-//                 route.push('/');
-//                 window.location.reload();
-
-//             } else {
-//                 // console.error('Login failed:', data);
-//                 console.log("error");
-
-//                 alert('Login failed. Please check your email and password.');
-//             }
-//         } catch (error) {
-//             console.error('Error during login:', error);
-//         }
-//     };
-
-//     return (
-//         <Container
-//             component="form"
-//             onSubmit={handleSubmit}
-//             sx={{
-//                 p: 3, // padding
-//                 backgroundColor: 'rgba(255, 255, 255, 0.7)', // màu nền trắng với độ trong suốt 70%
-//                 display: 'flex',
-//                 flexDirection: 'column',
-//                 borderRadius: 2,
-//                 justifyContent: "space-around",
-//                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // hiệu ứng bóng
-//                 backdropFilter: 'blur(10px)' // hiệu ứng làm mờ phía sau container
-//             }}
-//         >
-//             <Grid item>
-//                 <TextField
-//                     required
-//                     name="email"
-//                     placeholder="email"
-//                     value={formData.email}
-//                     onChange={handleChange}
-//                     variant="outlined"
-//                     autoComplete="cuurent-email"
-//                     InputProps={{
-//                         startAdornment: (
-//                             <InputAdornment position="start">
-//                                 <EmailIcon />
-//                             </InputAdornment>
-//                         ),
-//                         style: { backgroundColor: 'white', borderRadius: '5px' }
-//                     }}
-//                     sx={{ mr: 1 }}
-//                 />
-//             </Grid>
-//             <Grid item>
-//                 <TextField
-//                     required
-//                     name="password"
-//                     placeholder="Password"
-//                     type={showPassword ? 'text' : 'password'}
-//                     value={formData.password}
-//                     onChange={handleChange}
-//                     variant="outlined"
-//                     autoComplete="current-password"
-//                     InputProps={{
-//                         startAdornment: (
-//                             <InputAdornment position="start">
-//                                 <LockIcon />
-//                             </InputAdornment>
-//                         ),
-//                         endAdornment: (
-//                             <InputAdornment position="end">
-//                                 <IconButton onClick={handleShowPassword}>
-//                                     {showPassword ? <VisibilityOff sx={{ color: 'black' }} /> : <Visibility sx={{ color: 'black' }} />}
-//                                 </IconButton>
-//                             </InputAdornment>
-//                         ),
-//                         style: { backgroundColor: 'white', borderRadius: '5px' }
-//                     }}
-//                     sx={{ mr: 1 }}
-//                 />
-//             </Grid>
-
-//             <Grid item>
-//                 <FormControlLabel
-//                     control={<Checkbox sx={{ color: 'black' }} />}
-//                     label={<span style={{ color: 'black' }}>Ghi nhớ</span>}
-//                 />
-//             </Grid>
-//             <Grid item>
-//                 <Button variant="text" sx={{ color: 'black', textTransform: 'none' }}>
-//                     Quên mật khẩu
-//                 </Button>
-//             </Grid>
-//             <Grid>
-//                 <Button type="submit"
-//                     onClick={handleSubmit}
-//                     variant="contained"
-//                     color="primary"
-//                     sx={{ backgroundColor: 'white', color: '#002855', fontWeight: 'bold', textTransform: 'none' }}>
-//                     Đăng nhập
-//                 </Button>
-//             </Grid>
-
-//         </Container>
-//     );
-
-
-
-// };
-
-// export default SinginBox;
-
-
 'use client'
 import React, { useState } from 'react';
 import {
@@ -226,18 +7,61 @@ import {
     FormControlLabel,
     Checkbox,
     Container,
-    Typography
+    Typography,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
+type Severity = 'success' | 'error' | 'warning' | 'info' | undefined;
+
+interface SnackbarState {
+    open: boolean;
+    message: string;
+    severity: Severity;
+}
+
 
 const SinginBox = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
+    const [formDataLogin, setFormData] = useState({
+        user: '',
+        password: '',
     });
+
+    const [snackbar, setSnackbar] = useState<SnackbarState>({
+        open: false,
+        message: '',
+        severity: undefined
+    });
+
+    const showSnackbar = (message: string, severity: Severity) => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
+    const handleClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackbar((prevState) => ({
+            ...prevState,
+            open: false,
+            message: '',
+        }));
+    };
+
+
 
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
@@ -249,7 +73,7 @@ const SinginBox = () => {
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData({
-            ...formData,
+            ...formDataLogin,
             [name]: value,
         });
     };
@@ -257,22 +81,59 @@ const SinginBox = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            if (formData.email === 'leeduchht@gmail.com' && formData.password === '123456') {
+
+            console.log(formDataLogin);
+
+            const loginInput = formDataLogin.user;
+
+            if (!loginInput) {
+                showSnackbar('Incorrect account or password', 'warning');
+
+                return
+            }
+            if (!formDataLogin.password) {
+                showSnackbar('Incorrect account or password', 'warning');
+                return
+            }
+
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/login`, {
+                userLogin: formDataLogin.user,
+                password: formDataLogin.password,
+            })
+
+            console.log(response);
+            if (response.data.EC === "0") {
+                showSnackbar(`${response.data.EM}`, 'success')
+
+                console.log(response.data.DT);
+                const user = response.data.DT;
+                // set session data
+
                 sessionStorage.setItem('userData', JSON.stringify({
                     token: 'form.jwt',
-                    userID: "1",
-                    email: formData.email,
-                    username: "test",
-                    phone: '0123123',
-                    address: '123123',
+                    userID: user.id,
+                    email: user.email,
+                    username: user.username,
+                    phone: user.phone,
+                    address: user.address,
+                    groupId: user.groupId,
                     authen: 'Admin'
                 }));
-
-                console.log("đăng nhập");
                 router.push('/');
-            } else {
-                alert('Login failed. Please check your email and password.');
+
             }
+            else {
+                if (response.data.EC === "-1") {
+                    showSnackbar(`${response.data.EM}`, 'warning')
+
+                }
+                else {
+                    showSnackbar(`${response.data.EM}`, 'error')
+                }
+
+
+            }
+
         } catch (error) {
             console.error('Error during login:', error);
         }
@@ -307,9 +168,9 @@ const SinginBox = () => {
                     <TextField
                         required
                         fullWidth
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
+                        name="user"
+                        placeholder="Email or Phone number"
+                        value={formDataLogin.user}
                         onChange={handleChange}
                         variant="outlined"
                         autoComplete="current-email"
@@ -330,7 +191,7 @@ const SinginBox = () => {
                         name="password"
                         placeholder="Password"
                         type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
+                        value={formDataLogin.password}
                         onChange={handleChange}
                         variant="outlined"
                         autoComplete="current-password"
@@ -378,6 +239,21 @@ const SinginBox = () => {
                     </Typography>
                 </Grid>
             </Grid>
+
+            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleClose}
+
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+
+            >
+                <Alert
+                    onClose={handleClose}
+                    severity={snackbar.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };
