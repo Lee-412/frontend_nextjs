@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TextField, Button, Grid, Box,
     InputAdornment,
@@ -27,6 +27,23 @@ interface SnackbarState {
 
 
 const SinginBox = () => {
+
+
+    useEffect(() => {
+
+        const userDataString = sessionStorage.getItem('userData');
+        console.log(userDataString);
+
+        if (userDataString) {
+            // route.push('/');
+            // console.log("người dùng đã đăng nhập");
+            router.push('/')
+        }
+    }, []);
+
+
+
+
     const [formDataLogin, setFormData] = useState({
         user: '',
         password: '',

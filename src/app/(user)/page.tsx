@@ -3,6 +3,7 @@ import styles from "./page.module.scss";
 import ImageSlider from "@/component/slider/slider";
 import { Container, PaletteMode } from "@mui/material";
 import { useState } from "react";
+import PrivateRouter from "@/component/private_router/private.router";
 
 export default function Home() {
   const slider = [
@@ -57,16 +58,16 @@ export default function Home() {
   return (
     <>
 
-      <div>
-        {/* <HeaderApp /> */}
-        <Container>
+      <Container>
+        <ImageSlider sliderData={slider} />
+        <ImageSlider sliderData={slider} />
+        <ImageSlider sliderData={slider} />
+        <ImageSlider sliderData={slider} />
+        <ImageSlider sliderData={slider} />
+        <ImageSlider sliderData={slider} />
 
-          <ImageSlider sliderData={slider} />
-          <ImageSlider sliderData={slider} />
-
-        </Container>
-        {/* <FooterApp /> */}
-      </div>
+      </Container>
     </>
+
   );
 }

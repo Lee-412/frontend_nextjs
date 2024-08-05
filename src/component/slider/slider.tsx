@@ -50,7 +50,7 @@ const ImageSlider = (props: any) => {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: "center" }}>
             <Typography sx={{
                 display: 'flex',
-                marginTop: "30px",
+                // marginTop: "30px",
                 marginBottom: "20px",
                 fontWeight: "bold",
                 width: "80vw",

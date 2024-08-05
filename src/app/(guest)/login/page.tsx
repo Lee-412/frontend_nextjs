@@ -10,10 +10,7 @@ const SinginPage = () => {
 
     return (
         <Box >
-
             <SinginBox />
-
-
         </Box>
     )
 

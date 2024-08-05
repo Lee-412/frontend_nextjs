@@ -16,6 +16,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { usePathname, useRouter } from 'next/navigation';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { log } from 'console';
+import { Router } from 'next/router';
 const logoStyle = {
     width: '140px',
     height: 'auto',
@@ -162,33 +163,44 @@ function AppAppBar(props: any) {
                         />
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                             <MenuItem
+                                onClick={() => {
+                                    route.push('/users')
+                                }}
+                                sx={{ py: '6px', px: '12px' }}
+                            >
+                                <Typography variant="body2" color="text.primary" >
+                                    User
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    route.push('/homepage')
+                                }}
+                                sx={{ py: '6px', px: '12px' }}
+                            >
+                                <Typography variant="body2" color="text.primary" >
+                                    Homepage
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    route.push('/about')
+                                }}
+                                sx={{ py: '6px', px: '12px' }}
+                            >
+                                <Typography variant="body2" color="text.primary" >
+                                    About
+                                </Typography>
+                            </MenuItem>
 
-                                sx={{ py: '6px', px: '12px' }}
-                            >
-                                <Typography variant="body2" color="text.primary">
-                                    Features
-                                </Typography>
-                            </MenuItem>
                             <MenuItem
+                                onClick={() => {
+                                    route.push('/profile')
+                                }}
                                 sx={{ py: '6px', px: '12px' }}
                             >
-                                <Typography variant="body2" color="text.primary">
-                                    Testimonials
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem
-                                sx={{ py: '6px', px: '12px' }}
-                            >
-                                <Typography variant="body2" color="text.primary">
-                                    Highlights
-                                </Typography>
-                            </MenuItem>
-
-                            <MenuItem
-                                sx={{ py: '6px', px: '12px' }}
-                            >
-                                <Typography variant="body2" color="text.primary">
-                                    FAQ
+                                <Typography variant="body2" color="text.primary" >
+                                    Profile
                                 </Typography>
                             </MenuItem>
                         </Box>
