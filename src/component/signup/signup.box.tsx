@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import {
-    TextField, Button, Grid, Box,
+    TextField, Button, Grid,
     InputAdornment,
     IconButton,
     Container,
@@ -17,18 +17,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { error } from 'console';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
 
 
-type Severity = 'success' | 'error' | 'warning' | 'info' | undefined;
-
-interface SnackbarState {
-    open: boolean;
-    message: string;
-    severity: Severity;
-}
 const SignupBox = () => {
 
     useEffect(() => {
@@ -63,21 +54,6 @@ const SignupBox = () => {
             message,
             severity
         });
-    };
-
-    const handleClose = (
-        event?: React.SyntheticEvent | Event,
-        reason?: string
-    ) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackbar((prevState) => ({
-            ...prevState,
-            open: false,
-            message: '',
-        }));
     };
 
     const handleShowPassword = () => {
@@ -388,21 +364,10 @@ const SignupBox = () => {
                     </Typography>
                 </Grid>
             </Grid>
-
-            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleClose}
-
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity={snackbar.severity}
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
+            <SnackbarModal
+                snackbar={snackbar}
+                setSnackbar={setSnackbar}
+            />
         </Container >
 
 

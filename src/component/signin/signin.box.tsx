@@ -1,29 +1,22 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import {
-    TextField, Button, Grid, Box,
+    TextField, Button, Grid,
     InputAdornment,
     IconButton,
     FormControlLabel,
     Checkbox,
     Container,
     Typography,
-    Snackbar,
-    Alert
+
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
 
-type Severity = 'success' | 'error' | 'warning' | 'info' | undefined;
-
-interface SnackbarState {
-    open: boolean;
-    message: string;
-    severity: Severity;
-}
 
 
 const SinginBox = () => {
@@ -40,9 +33,6 @@ const SinginBox = () => {
             router.push('/')
         }
     }, []);
-
-
-
 
     const [formDataLogin, setFormData] = useState({
         user: '',
@@ -62,23 +52,6 @@ const SinginBox = () => {
             severity
         });
     };
-
-    const handleClose = (
-        event?: React.SyntheticEvent | Event,
-        reason?: string
-    ) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackbar((prevState) => ({
-            ...prevState,
-            open: false,
-            message: '',
-        }));
-    };
-
-
 
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
@@ -117,7 +90,6 @@ const SinginBox = () => {
                 userLogin: formDataLogin.user,
                 password: formDataLogin.password,
             })
-
             console.log(response);
             if (response.data.EC === "0") {
                 showSnackbar(`${response.data.EM}`, 'success')
@@ -153,6 +125,7 @@ const SinginBox = () => {
 
         } catch (error) {
             console.error('Error during login:', error);
+            showSnackbar('Something wrong in server', 'error')
         }
     };
 
@@ -257,20 +230,10 @@ const SinginBox = () => {
                 </Grid>
             </Grid>
 
-            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleClose}
-
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity={snackbar.severity}
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
+            <SnackbarModal
+                snackbar={snackbar}
+                setSnackbar={setSnackbar}
+            />
         </Container>
     );
 };
