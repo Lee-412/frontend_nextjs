@@ -14,8 +14,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
+import { handleLogin } from '@/utils/request';
 
 
 
@@ -85,11 +85,8 @@ const SinginBox = () => {
                 showSnackbar('Incorrect account or password', 'warning');
                 return
             }
+            const response = await handleLogin(formDataLogin.user, formDataLogin.password);
 
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/login`, {
-                userLogin: formDataLogin.user,
-                password: formDataLogin.password,
-            })
             console.log(response);
             if (response.data.EC === "0") {
                 showSnackbar(`${response.data.EM}`, 'success')

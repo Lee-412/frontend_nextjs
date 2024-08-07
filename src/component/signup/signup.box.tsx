@@ -16,8 +16,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
+import { handleSignUp } from '@/utils/request';
 
 
 const SignupBox = () => {
@@ -129,15 +129,8 @@ const SignupBox = () => {
         }
         try {
             console.log(formData);
-            const respone = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/register`, {
-                username: formData.username,
-                email: formData.email,
-                password: formData.password,
-                sex: formData.sex,
-                phone: formData.phone,
-                address: formData.address
+            const respone = await handleSignUp(formData);
 
-            })
             console.log(respone.data.EC);
             if (respone.data.EC === "0") {
                 showSnackbar(`${respone.data.EM}`, 'success')

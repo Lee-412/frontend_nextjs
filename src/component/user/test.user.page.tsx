@@ -1,7 +1,6 @@
 'use client'
 
-import { Button, Container, TableCell, Tooltip } from '@mui/material'
-import axios from 'axios';
+import { Button, Container, Pagination, TableCell, TablePagination, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,7 +18,8 @@ import AddUserModal from './user.create';
 import EditUserModal from './user.edit';
 import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
 import ConfirmDialog from '../feedback/confirm.dialog';
-
+import { getUserWithPagination, handleDeleteUser } from '@/utils/request';
+import axios from '@/utils/axios';
 export type DataUser = {
     id: number,
     email: string,
@@ -48,6 +48,8 @@ export type dataUserClient = {
 }
 interface TableDataUser {
     data: DataUser[];
+    totalRows: number;
+    totalPage: number;
     loading: boolean;
 }
 const TestUserBase = () => {
@@ -69,7 +71,16 @@ const TestUserBase = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [confirmDialog, setConformDialog] = useState(false)
 
-    const [dataUser, setDataUser] = useState<TableDataUser>({ data: [], loading: false })
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const [currentLimit, setCurrentLimit] = useState(5);
+
+    const [dataUser, setDataUser] = useState<TableDataUser>({
+        data: [],
+        totalRows: 0,
+        totalPage: 0,
+        loading: false
+    })
     const [userData, setUserData] = useState({
         token: '',
         userID: 0,
@@ -126,11 +137,11 @@ const TestUserBase = () => {
                 authen: 'Admin'
             })
             {
-                showSnackbar('User check', 'success')
+                // showSnackbar('User check', 'success')
             }
 
         }
-    }, []);
+    }, [currentPage, currentLimit]);
 
 
     const handleClickCreate = async () => {
@@ -154,8 +165,6 @@ const TestUserBase = () => {
         setOpenEditUser(true)
     }
 
-
-
     const handleClickDelete = async (userId: number) => {
         try {
             console.log(userId);
@@ -167,9 +176,7 @@ const TestUserBase = () => {
                 return; // Nếu người dùng chọn "Cancel", thoát khỏi hàm
             }
 
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/users/delete-user`, {
-                id: userId,
-            });
+            const response = await handleDeleteUser(userId)
 
             console.log(response);
             setSnackbar({
@@ -185,10 +192,12 @@ const TestUserBase = () => {
 
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/users/get-user`)
+            const response = await getUserWithPagination(currentPage, currentLimit);
             console.log(response);
             setDataUser({
-                data: response.data.DT,
+                data: response.data.DT.user,
+                totalRows: response.data.DT.totalRows,
+                totalPage: response.data.DT.totalPage,
                 loading: true,
             })
             console.log(dataUser);
@@ -198,6 +207,16 @@ const TestUserBase = () => {
             console.log(error);
         }
     }
+    const handleChangePage = (_event: any, newPage: any) => {
+        setCurrentPage(newPage);
+        console.log(newPage);
+
+    };
+
+    const handleChangeRowsPerPage = (event: any) => {
+        setCurrentLimit(parseInt(event.target.value, 10));
+        setCurrentPage(0);
+    };
     return (
         <>
 
@@ -231,7 +250,8 @@ const TestUserBase = () => {
                     <Table sx={{ minWidth: 700 }} >
                         <TableHead>
                             <TableRow>
-                                <TableCell>ID</TableCell>
+                                <TableCell align="center">STT</TableCell>
+                                <TableCell align="center">ID</TableCell>
                                 <TableCell align="center">username</TableCell>
                                 <TableCell align="center">email</TableCell>
                                 <TableCell align="center">address</TableCell>
@@ -243,7 +263,8 @@ const TestUserBase = () => {
                         <TableBody>
                             {dataUser.data.map((user, index) => (
                                 <TableRow key={index}>
-                                    <TableCell align='center'>{index + 1}</TableCell>
+                                    <TableCell align='center'>{currentLimit * (currentPage) + index + 1}</TableCell>
+                                    <TableCell align='center'>{user.id}</TableCell>
                                     <TableCell align="center">{user.username}</TableCell>
                                     <TableCell align="center">{user.email}</TableCell>
                                     <TableCell align="center">{user.address}</TableCell>
@@ -272,8 +293,27 @@ const TestUserBase = () => {
                                 </TableRow>
                             ))}
                         </TableBody>
+
+
                     </Table>
+                    <TablePagination
+                        component="div"
+                        count={dataUser.totalRows}
+                        page={currentPage}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={currentLimit}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 15]}
+                    />
                 </TableContainer>
+                <Container sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '3vh'
+                }}>
+
+                </Container>
+
                 <SnackbarModal
                     snackbar={snackbar}
                     setSnackbar={setSnackbar}

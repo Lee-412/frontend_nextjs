@@ -6,9 +6,9 @@ import TextField from '@mui/material/TextField';
 import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { dataUserClient } from './test.user.page';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Severity } from '../feedback/snackbar';
+import { handleCreateUser } from '@/utils/request';
 
 interface CreateUserProps {
     openAddUser: boolean,
@@ -120,15 +120,8 @@ const AddUserModal = (props: CreateUserProps) => {
         }
         try {
             console.log(formUserData);
-            const respone = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/users/create-user`, {
-                username: formUserData.username,
-                email: formUserData.email,
-                password: formUserData.password,
-                sex: formUserData.sex,
-                phone: formUserData.phone,
-                address: formUserData.address,
-                groupId: formUserData.groupId,
-            })
+
+            const respone = await handleCreateUser(formUserData);
             console.log(respone.data.EC);
             if (respone.data.EC === "0") {
                 showSnackbar(`${respone.data.EM}`, 'success');

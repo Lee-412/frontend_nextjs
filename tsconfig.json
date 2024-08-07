@@ -33,7 +33,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/(guest)/register",
-    "src/app/(guest)/login"
+    "src/app/(guest)/login",
+    "src/utils/axios.ts"
   ],
   "exclude": [
     "node_modules"

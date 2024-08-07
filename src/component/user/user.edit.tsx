@@ -4,9 +4,10 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
-import axios from 'axios';
+import axios from '@/utils/axios'
 import { dataUserClient } from './test.user.page';
 import { Severity } from '../feedback/snackbar';
+import { handleEditUser } from '@/utils/request';
 
 interface EditUserProps {
     openEditUser: boolean;
@@ -102,21 +103,14 @@ const EditUserModal = (props: EditUserProps) => {
 
 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL_API}/users/edit-user`, {
-                id: formUserData.id,
-                username: formUserData.username,
-                email: formUserData.email,
-                sex: formUserData.sex,
-                phone: formUserData.phone,
-                address: formUserData.address,
-                groupId: formUserData.groupId,
-            });
+
+            const response = await handleEditUser(formUserData);
             if (response.data.EC === "0") {
                 showSnackbar(`${response.data.EM}`, 'success');
                 fetchUsers();
                 resetFormData();
             } else {
-                showSnackbar(`${response.data.EM}`, response.data.EC === "-1" ? 'warning' : 'error');
+                showSnackbar(`${signin.EM}`, signin.EC === "-1" ? 'warning' : 'error');
             }
         } catch (error) {
             console.error('Error during update:', error);
