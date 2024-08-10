@@ -19,15 +19,58 @@ instance.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
+instance.defaults.withCredentials = true;
+
 // // Add a response interceptor
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response;
-}, function (error) {
+}, function (err) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    const status = err && err.response && err.response?.status || 500;
+
+    console.log(status);
+    switch (status) {
+        // authentication (token related issues)
+        case 401: {
+            return Promise.reject(err);
+
+        }
+
+        // forbidden (permission related issues)
+        case 403: {
+            return Promise.reject(err);
+        }
+
+        // bad request
+        case 400: {
+            return Promise.reject(err);
+        }
+
+        // not found
+        case 404: {
+            return Promise.reject(err);
+        }
+
+        // conflict
+        case 409: {
+            return Promise.reject(err);
+        }
+
+        // unprocessable
+        case 422: {
+            return Promise.reject(err);
+        }
+
+        // generic api error (server related) unexpected
+        default: {
+            return Promise.reject(err);
+        }
+    }
+
+    return Promise.reject(err);
 });
 
 

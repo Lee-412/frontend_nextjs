@@ -110,6 +110,7 @@ const TestUserBase = () => {
     )
     useEffect(() => {
 
+
         const userDataString = sessionStorage.getItem('userData');
         console.log(userDataString);
 
@@ -141,6 +142,8 @@ const TestUserBase = () => {
             }
 
         }
+
+
     }, [currentPage, currentLimit]);
 
 
@@ -193,7 +196,7 @@ const TestUserBase = () => {
     const fetchUser = async () => {
         try {
             const response = await getUserWithPagination(currentPage, currentLimit);
-            console.log(response);
+            console.log("check reponse", response);
             setDataUser({
                 data: response.data.DT.user,
                 totalRows: response.data.DT.totalRows,
@@ -205,11 +208,14 @@ const TestUserBase = () => {
 
         } catch (error) {
             console.log(error);
+            const axiosError = error as AxiosError;
+            const errorMessage = axiosError.response?.data?.EM as string || "An unknown error occurred";
+            showSnackbar(errorMessage, 'error');
         }
     }
     const handleChangePage = (_event: any, newPage: any) => {
         setCurrentPage(newPage);
-        console.log(newPage);
+        console.log(newPage)
 
     };
 
