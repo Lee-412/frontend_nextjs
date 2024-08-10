@@ -22,11 +22,6 @@ import { handleSignUp } from '@/utils/request';
 
 const SignupBox = () => {
 
-    useEffect(() => {
-
-
-    }, [])
-
     const [formData, setFormData] = useState({
         username: '',
         email: '',

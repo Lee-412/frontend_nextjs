@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Container, Pagination, TableCell, TablePagination, Tooltip } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -21,6 +21,7 @@ import ConfirmDialog from '../feedback/confirm.dialog';
 import { getUserWithPagination, handleDeleteUser } from '@/utils/request';
 import axios from '@/utils/axios';
 import { AxiosError } from 'axios';
+import { UserContext } from '../userContext/userContext';
 export type DataUser = {
     id: number,
     email: string,
@@ -109,6 +110,9 @@ const TestUserBase = () => {
             authen: ''
         }
     )
+
+    const { user } = React.useContext(UserContext);
+    console.log("check user login: ", user);
     useEffect(() => {
 
 
@@ -189,13 +193,17 @@ const TestUserBase = () => {
                 severity: 'success'
             });
             fetchUser();
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
+            let errorMessage = error.response.data.EM;
+            showSnackbar(errorMessage, 'error');
+
         }
     };
 
     const fetchUser = async () => {
         try {
+
             const response = await getUserWithPagination(currentPage, currentLimit);
             console.log("check reponse", response);
             setDataUser({
@@ -207,10 +215,9 @@ const TestUserBase = () => {
             console.log(dataUser);
 
 
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            //@ts-expect-error
-            let errorMessage = error.reponse.data.EM;
+            let errorMessage = error.response.data.EM;
             showSnackbar(errorMessage, 'error');
         }
     }

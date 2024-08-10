@@ -65,7 +65,6 @@ export default function Home() {
         <ImageSlider sliderData={slider} />
         <ImageSlider sliderData={slider} />
         <ImageSlider sliderData={slider} />
-
       </Container>
     </>
 

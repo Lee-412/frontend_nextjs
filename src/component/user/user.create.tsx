@@ -140,6 +140,7 @@ const AddUserModal = (props: CreateUserProps) => {
             // router.push('/login');
         } catch (error) {
             console.error('Error during registration:', error);
+
         }
     };
     return (

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     TextField, Button, Grid,
     InputAdornment,
@@ -16,11 +16,13 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
 import { handleLogin } from '@/utils/request';
+import { ContextData, UserContext } from '../userContext/userContext';
 
 
 
 const SinginBox = () => {
 
+    const { loginContext } = React.useContext(UserContext);
 
     useEffect(() => {
 
@@ -105,6 +107,22 @@ const SinginBox = () => {
                     groupId: user.groupId,
                     authen: 'Admin'
                 }));
+
+                let groupRole = user.role;
+                let email = user.email;
+                let username = user.username;
+                let token = user.access_token;
+                let data: ContextData = {
+                    token: token,
+                    isAuthenticate: true,
+                    account: {
+                        email: email,
+                        username: username,
+                        groupRoles: groupRole,
+
+                    }
+                }
+                loginContext(data)
                 router.push('/');
 
             }

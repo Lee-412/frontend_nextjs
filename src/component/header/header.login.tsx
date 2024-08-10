@@ -16,7 +16,6 @@ const AppHeader = () => {
     const pathname = usePathname()
 
     useEffect(() => {
-        console.log(pathname);
         setCheckLogin(pathname)
     }, [pathname])
 
