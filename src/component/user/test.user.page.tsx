@@ -20,6 +20,7 @@ import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
 import ConfirmDialog from '../feedback/confirm.dialog';
 import { getUserWithPagination, handleDeleteUser } from '@/utils/request';
 import axios from '@/utils/axios';
+import { AxiosError } from 'axios';
 export type DataUser = {
     id: number,
     email: string,
@@ -208,8 +209,8 @@ const TestUserBase = () => {
 
         } catch (error) {
             console.log(error);
-            const axiosError = error as AxiosError;
-            const errorMessage = axiosError.response?.data?.EM as string || "An unknown error occurred";
+            //@ts-expect-error
+            let errorMessage = error.reponse.data.EM;
             showSnackbar(errorMessage, 'error');
         }
     }
