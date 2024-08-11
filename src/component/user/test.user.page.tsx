@@ -83,16 +83,7 @@ const TestUserBase = () => {
         totalPage: 0,
         loading: false
     })
-    const [userData, setUserData] = useState({
-        token: '',
-        userID: 0,
-        username: '',
-        email: '',
-        phone: '',
-        address: '',
-        groupId: 3,
-        authen: ''
-    })
+
     const route = useRouter();
     const [openAddUser, setOpenAddUser] = useState(false)
     const [openEditUser, setOpenEditUser] = useState(false)
@@ -111,49 +102,61 @@ const TestUserBase = () => {
         }
     )
 
-    const { user } = React.useContext(UserContext);
+    const { user, logoutContext } = React.useContext(UserContext);
     console.log("check user login: ", user);
+
     useEffect(() => {
 
-
-        const userDataString = sessionStorage.getItem('userData');
-        console.log(userDataString);
-
-        if (!userDataString) {
-            // route.push('/');
-            console.log("no data");
+        if (user && user.isAuthenticate === false) {
             setSnackbar({
                 open: true,
-                message: 'No authenticated',
-                severity: 'error'
+                message: "Bạn phải đăng nhập với có thể sử dụng chức năng  này.\nHệ thống sẽ đưa bạn tới trang đăng nhập sau vài giây...",
+                severity: 'warning'
             })
+            route.push('/login');
+
         }
         else {
-            const dataServer = JSON.parse(userDataString);
-            console.log(dataServer);
             fetchUser();
-            setUserData({
-                token: 'form.jwt',
-                userID: dataServer.userID,
-                email: dataServer.email,
-                username: dataServer.username,
-                phone: dataServer.phone,
-                address: dataServer.address,
-                groupId: dataServer.groupId,
-                authen: 'Admin'
-            })
-            {
-                // showSnackbar('User check', 'success')
-            }
+            console.log("check user");
 
         }
 
 
     }, [currentPage, currentLimit]);
 
+    const handleReloadPage = () => {
 
+        if (user && user.isAuthenticate === false) {
+            setSnackbar({
+                open: true,
+                message: "Bạn phải đăng nhập với có thể sử dụng chức năng này.",
+                severity: 'warning'
+            })
+
+        }
+        else {
+            fetchUser();
+
+        }
+
+    }
     const handleClickCreate = async () => {
-        setOpenAddUser(true)
+
+        if (user && user.isAuthenticate === false) {
+            setSnackbar({
+                open: true,
+                message: "Bạn phải đăng nhập với có thể sử dụng chức năng này.",
+                severity: 'warning'
+            })
+
+
+            console.log("user invalid");
+        }
+        else {
+            setOpenAddUser(true)
+
+        }
     }
 
     const handleClickEdit = async (user: DataUser) => {
@@ -175,29 +178,32 @@ const TestUserBase = () => {
 
     const handleClickDelete = async (userId: number) => {
         try {
-            console.log(userId);
-
-            // Hiển thị hộp thoại xác nhận
             const confirmed = window.confirm("Are you sure you want to delete this user?");
 
             if (!confirmed) {
-                return; // Nếu người dùng chọn "Cancel", thoát khỏi hàm
+                return;
             }
 
-            const response = await handleDeleteUser(userId)
 
-            console.log(response);
+            if (dataUser.data.length === 1 && dataUser.data[0].id === userId) {
+                const response = await handleDeleteUser(userId)
+                setCurrentPage(currentPage - 1);
+            }
+            else {
+                const response = await handleDeleteUser(userId);
+            }
+
             setSnackbar({
                 open: true,
                 message: 'Delete user successfully',
                 severity: 'success'
             });
             fetchUser();
+
         } catch (error: any) {
             console.log(error);
             let errorMessage = error.response.data.EM;
             showSnackbar(errorMessage, 'error');
-
         }
     };
 
@@ -205,25 +211,33 @@ const TestUserBase = () => {
         try {
 
             const response = await getUserWithPagination(currentPage, currentLimit);
-            console.log("check reponse", response);
-            setDataUser({
-                data: response.data.DT.user,
-                totalRows: response.data.DT.totalRows,
-                totalPage: response.data.DT.totalPage,
-                loading: true,
-            })
-            console.log(dataUser);
+            console.log(response);
+            if (response.data.EC === "0") {
+                console.log('hit 0');
 
+                setDataUser({
+                    data: response.data.DT.user,
+                    totalRows: response.data.DT.totalRows,
+                    totalPage: response.data.DT.totalPage,
+                    loading: true,
+                })
+            }
+            else {
+                console.log('hit');
 
-        } catch (error: any) {
-            console.log(error);
-            let errorMessage = error.response.data.EM;
-            showSnackbar(errorMessage, 'error');
+                showSnackbar(response.data.EM, 'error');
+                logoutContext()
+                route.push('/login');
+            }
+
+        } catch (error) {
+            showSnackbar('error ', 'error');
+            route.push('/login');
+
         }
     }
     const handleChangePage = (_event: any, newPage: any) => {
         setCurrentPage(newPage);
-        console.log(newPage)
 
     };
 
@@ -231,6 +245,7 @@ const TestUserBase = () => {
         setCurrentLimit(parseInt(event.target.value, 10));
         setCurrentPage(0);
     };
+
     return (
         <>
 
@@ -252,7 +267,7 @@ const TestUserBase = () => {
                         }}>Add user</Button>
 
                     <IconButton
-                        onClick={fetchUser}
+                        onClick={handleReloadPage}
                         sx={{ color: 'black' }}>
                         <RestartAltIcon />
                     </IconButton>
@@ -275,37 +290,45 @@ const TestUserBase = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {dataUser.data.map((user, index) => (
-                                <TableRow key={index}>
-                                    <TableCell align='center'>{currentLimit * (currentPage) + index + 1}</TableCell>
-                                    <TableCell align='center'>{user.id}</TableCell>
-                                    <TableCell align="center">{user.username}</TableCell>
-                                    <TableCell align="center">{user.email}</TableCell>
-                                    <TableCell align="center">{user.address}</TableCell>
-                                    <TableCell align="center">{user.Group ? user.Group.name : 'undefined'}</TableCell>
-                                    <TableCell align="center" >
-                                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                                            <Tooltip title="Edit user" arrow>
+                            {
+                                dataUser.data && dataUser.data.length > 0 ? (
 
-                                                <IconButton onClick={() => handleClickEdit(user)}
-                                                >
-                                                    <BorderColorIcon />
-                                                </IconButton>
+                                    dataUser.data.map((user, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell align='center'>{currentLimit * (currentPage) + index + 1}</TableCell>
+                                            <TableCell align='center'>{user.id}</TableCell>
+                                            <TableCell align="center">{user.username}</TableCell>
+                                            <TableCell align="center">{user.email}</TableCell>
+                                            <TableCell align="center">{user.address}</TableCell>
+                                            <TableCell align="center">{user.Group ? user.Group.name : 'undefined'}</TableCell>
+                                            <TableCell align="center" >
+                                                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Tooltip title="Edit user" arrow>
 
-                                            </Tooltip>
-                                            <Tooltip title="Delete user" arrow>
+                                                        <IconButton onClick={() => handleClickEdit(user)}
+                                                        >
+                                                            <BorderColorIcon />
+                                                        </IconButton>
 
-                                                <IconButton
-                                                    onClick={() => handleClickDelete(user.id)}
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Box>
-                                    </TableCell>
+                                                    </Tooltip>
+                                                    <Tooltip title="Delete user" arrow>
 
-                                </TableRow>
-                            ))}
+                                                        <IconButton
+                                                            onClick={() => handleClickDelete(user.id)}
+                                                        >
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Box>
+                                            </TableCell>
+
+                                        </TableRow>
+                                    )))
+                                    : (
+                                        <TableRow>
+                                            <TableCell colSpan={7} align="center">No users available</TableCell>
+                                        </TableRow>
+                                    )}
                         </TableBody>
 
 
@@ -320,13 +343,6 @@ const TestUserBase = () => {
                         rowsPerPageOptions={[5, 10, 15]}
                     />
                 </TableContainer>
-                <Container sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '3vh'
-                }}>
-
-                </Container>
 
                 <SnackbarModal
                     snackbar={snackbar}

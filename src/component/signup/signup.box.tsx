@@ -357,9 +357,6 @@ const SignupBox = () => {
                 setSnackbar={setSnackbar}
             />
         </Container >
-
-
-
     );
 };
 

@@ -37,8 +37,7 @@ const SnackbarModal = (props: any) => {
                 onClose={handleClose}
                 severity={snackbar.severity}
                 variant="filled"
-                sx={{ width: '100%' }}
-            >
+                sx={{ width: '100%', whiteSpace: 'pre-line' }}             >
                 {snackbar.message}
             </Alert>
         </Snackbar>

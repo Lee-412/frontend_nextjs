@@ -110,7 +110,8 @@ const EditUserModal = (props: EditUserProps) => {
                 fetchUsers();
                 resetFormData();
             } else {
-                showSnackbar(`${signin.EM}`, signin.EC === "-1" ? 'warning' : 'error');
+                showSnackbar(`${response.data.EM}`, response.data.EC === "-1" ? 'warning' : 'error');
+
             }
         } catch (error) {
             console.error('Error during update:', error);

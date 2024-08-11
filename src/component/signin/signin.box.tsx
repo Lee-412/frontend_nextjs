@@ -21,20 +21,20 @@ import { ContextData, UserContext } from '../userContext/userContext';
 
 
 const SinginBox = () => {
+    const router = useRouter();
 
     const { loginContext } = React.useContext(UserContext);
+    const { user } = React.useContext(UserContext);
+    console.log(user);
+
 
     useEffect(() => {
 
-        const userDataString = sessionStorage.getItem('userData');
-        console.log(userDataString);
 
-        if (userDataString) {
-            // route.push('/');
-            // console.log("người dùng đã đăng nhập");
+        if (user && user.isAuthenticate === true) {
             router.push('/')
         }
-    }, []);
+    }, [user, router]);
 
     const [formDataLogin, setFormData] = useState({
         user: '',
@@ -56,7 +56,6 @@ const SinginBox = () => {
     };
 
     const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -97,16 +96,7 @@ const SinginBox = () => {
                 const user = response.data.DT;
                 // set session data
 
-                sessionStorage.setItem('userData', JSON.stringify({
-                    token: 'form.jwt',
-                    userID: user.id,
-                    email: user.email,
-                    username: user.username,
-                    phone: user.phone,
-                    address: user.address,
-                    groupId: user.groupId,
-                    authen: 'Admin'
-                }));
+
 
                 let groupRole = user.role;
                 let email = user.email;

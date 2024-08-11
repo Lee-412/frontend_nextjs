@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 
 // Set config defaults when creating the instance
@@ -31,12 +31,13 @@ instance.interceptors.response.use(function (response) {
     // Do something with response error
     const status = err && err.response && err.response?.status || 500;
 
-    console.log(status);
+    // console.log(status);
     switch (status) {
         // authentication (token related issues)
         case 401: {
-            return Promise.reject(err);
+            console.log('401');
 
+            return err.response;
         }
 
         // forbidden (permission related issues)

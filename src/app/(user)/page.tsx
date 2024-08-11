@@ -1,9 +1,10 @@
+'use client'
 import Image from "next/image";
 import styles from "./page.module.scss";
 import ImageSlider from "@/component/slider/slider";
 import { Container, PaletteMode } from "@mui/material";
-import { useState } from "react";
-import PrivateRouter from "@/component/private_router/private.router";
+import { UserContext } from "@/component/userContext/userContext";
+import React from "react";
 
 export default function Home() {
   const slider = [
@@ -55,6 +56,9 @@ export default function Home() {
     },
   ];
 
+  const { user } = React.useContext(UserContext);
+  console.log(user);
+
   return (
     <>
 
@@ -66,6 +70,11 @@ export default function Home() {
         <ImageSlider sliderData={slider} />
         <ImageSlider sliderData={slider} />
       </Container>
+
+
+
+
+
     </>
 
   );

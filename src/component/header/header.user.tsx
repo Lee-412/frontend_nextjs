@@ -22,6 +22,7 @@ const logoStyle = {
     height: 'auto',
     cursor: 'pointer',
 };
+import { UserContext } from '../userContext/userContext';
 
 interface AppAppBarProps {
     mode: PaletteMode;
@@ -36,69 +37,49 @@ function AppAppBar(props: any) {
     };
     const [userData, setUserData] = useState({
         token: '',
-        userID: 0,
         username: '',
         email: '',
-        phone: '',
-        address: '',
-        groupId: 0,
-        authen: ''
+        isAuthenticate: false
     })
+    const router = useRouter();
 
-    console.log(userData);
+    const { user, logoutContext } = React.useContext(UserContext);
+    const pathname = usePathname();
 
     useEffect(() => {
 
-        const userDataString = sessionStorage.getItem('userData');
-        console.log(userDataString);
-
-        if (!userDataString) {
-            // route.push('/');
+        if (user && user.isAuthenticate === false && pathname !== '/' && pathname !== '/login') {
+            route.push('/login');
             console.log("no data");
-            route.push('/')
         }
         else {
-            const dataServer = JSON.parse(userDataString);
-            console.log(dataServer);
-
-            if (dataServer.authen == 'Admin') {
-                setUserData({
-                    token: 'form.jwt',
-                    userID: dataServer.userID,
-                    email: dataServer.email,
-                    username: dataServer.username,
-                    phone: dataServer.phone,
-                    address: dataServer.address,
-                    groupId: dataServer.groupId,
-                    authen: 'Admin'
-                })
-            } else {
-                sessionStorage.clear();
-                route.push('/');
-            }
+            console.log("check user");
+            setUserData({
+                token: user.token,
+                username: user.account.username,
+                email: user.account.email,
+                isAuthenticate: user.isAuthenticate
+            });
         }
-    }, []);
+
+    }, [user]);
     console.log(userData);
 
     const handleLogout = () => {
         if (window.confirm('Bạn có muốn đăng xuất không?')) {
-            sessionStorage.clear();
             route.push('/');
             setUserData({
                 token: '',
-                userID: 0,
                 username: '',
                 email: '',
-                phone: '',
-                address: '',
-                groupId: 0,
-                authen: ''
+                isAuthenticate: false
             })
+            logoutContext()
+
         };
 
     }
 
-    const pathname = usePathname()
     console.log(pathname);
 
 
@@ -174,7 +155,7 @@ function AppAppBar(props: any) {
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
-                                    route.push('/homepage')
+                                    route.push('/')
                                 }}
                                 sx={{ py: '6px', px: '12px' }}
                             >
@@ -207,9 +188,9 @@ function AppAppBar(props: any) {
                     </Box>
                     <Box>
                         {
-                            userData.userID != 0 && userData != undefined ?
+                            userData && userData.isAuthenticate === true ?
                                 <>
-                                    {console.log("có userData")
+                                    {console.log("có userDat")
                                     }
                                     <Grid container spacing={1} alignItems="center">
                                         <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
