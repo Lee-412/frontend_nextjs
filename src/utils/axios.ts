@@ -10,9 +10,13 @@ const instance = axios.create({
 // instance.defaults.headers.common['Authorization'] = "AUTH_TOKEN 123";
 
 
+// instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("jwt")}`;
+
+// instance.defaults.headers.common = { 'Authorization': `bearer ${localStorage.getItem("jwt")}` }
 // // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
+    config.headers.Authorization = `Bearer ${localStorage.getItem("jwt")}`;
     return config;
 }, function (error) {
     // Do something with request error
@@ -20,6 +24,7 @@ instance.interceptors.request.use(function (config) {
 });
 
 instance.defaults.withCredentials = true;
+
 
 // // Add a response interceptor
 instance.interceptors.response.use(function (response) {

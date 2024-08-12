@@ -44,27 +44,6 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }));
     };
 
-    // const fetchUserContext = async () => {
-    //     let response = await getUserAccount()
-    //     console.log(response);
-    //     if (response && response.data.EC === 0) {
-    //         console.log('here');
-    //         setUser(() => ({
-    //             isLoading: false,
-    //             isAuthenticate: true,
-    //             token: response.data.DT.access_token,
-    //             account: {
-    //                 email: response.data.DT.email,
-    //                 username: response.data.DT.username,
-    //                 groupRoles: response.data.DT.role
-    //             }
-    //         }));
-    //     }
-    //     else {
-    //         console.log('here');
-    //         setUser({ ...defaultUser, isLoading: false })
-    //     }
-    // }
     const router = useRouter();
 
     const fetchUserContext = async () => {
@@ -91,7 +70,6 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
             }
         } catch (error: any) {
             // Xử lý lỗi và điều hướng về trang login nếu gặp lỗi
-            alert('me')
             console.error('Error fetching user account:', error);
             if (error.response && error.response.status === 401) {
                 // Nếu lỗi 401, điều hướng về trang login
@@ -105,16 +83,11 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const pathname = window.location.pathname;
 
-        // Nếu là trang home ('/'), chỉ cần đặt isLoading về false và không gọi fetchUserContext
         if (pathname === '/') {
-            // setUser((prevUser) => ({
-            //     ...prevUser,
-            //     isLoading: false
-            // }));
+
             fetchUserContext();
 
         }
-        // Nếu không phải là trang login hoặc home, thì gọi fetchUserContext
         else if (pathname !== '/login') {
             fetchUserContext();
         }

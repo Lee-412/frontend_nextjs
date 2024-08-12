@@ -126,7 +126,7 @@ const AddUserModal = (props: CreateUserProps) => {
             if (respone.data.EC === "0") {
                 showSnackbar(`${respone.data.EM}`, 'success');
                 fetchUsers();
-                // resetFormData();
+                resetFormData();
             }
             else {
                 if (respone.data.EC === "-1") {

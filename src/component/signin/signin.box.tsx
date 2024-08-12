@@ -112,6 +112,7 @@ const SinginBox = () => {
 
                     }
                 }
+                localStorage.setItem('jwt', token);
                 loginContext(data)
                 router.push('/');
 
@@ -124,10 +125,7 @@ const SinginBox = () => {
                 else {
                     showSnackbar(`${response.data.EM}`, 'error')
                 }
-
-
             }
-
         } catch (error) {
             console.error('Error during login:', error);
             showSnackbar('Something wrong in server', 'error')
