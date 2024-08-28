@@ -32,6 +32,11 @@ const AppHeader = () => {
     }
     console.log(checkLogin);
 
+    const handleClick = (e: any) => {
+        route.push('/');
+
+    };
+
     return (
         <AppBar
             position="sticky" elevation={3}
@@ -67,11 +72,9 @@ const AppHeader = () => {
             >
                 <Grid container spacing={1} alignItems="center">
                     <Grid item>
-                        <Link href="/" passHref>
-                            <IconButton color="secondary" aria-label="home">
-                                <img src="/path-to-your-logo.png" alt="Logo" style={{ height: 30 }} />
-                            </IconButton>
-                        </Link>
+                        <IconButton color="secondary" aria-label="home" onClick={handleClick}>
+                            <img src="/path-to-your-logo.png" alt="Logo" style={{ height: 30 }} />
+                        </IconButton>
                     </Grid>
                     <Grid item sx={{ flexGrow: 1 }}>
                         <Typography variant="h6" component="div">

@@ -8,6 +8,10 @@ import LoadingPage from "@/component/feedback/loading";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const { user } = React.useContext(UserContext);
+
+    console.log(user);
+
+
     return (
 
         <>

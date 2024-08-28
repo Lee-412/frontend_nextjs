@@ -15,6 +15,7 @@ export interface ContextData {
 }
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
+    const pathname = usePathname(); // Get the current pathname
 
 
     const [user, setUser] = useState({
@@ -36,6 +37,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logoutContext = () => {
+
         setUser(() => ({
             isLoading: false,
             isAuthenticate: false,
@@ -46,14 +48,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     const router = useRouter();
 
-    const fetchUserContext = async () => {
 
+    const fetchUserContext = async () => {
+        console.log('Fetching user data...');
         try {
             const response = await getUserAccount();
             console.log(response);
 
             if (response && response.data.EC === 0) {
-                console.log('User authenticat');
+                console.log('User authenticated');
                 setUser({
                     isLoading: false,
                     isAuthenticate: true,
@@ -65,33 +68,50 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     }
                 });
             } else {
-                console.log('User not authenticated');
-                setUser({ ...defaultUser, isLoading: false });
+                console.log('User not authenticated ');
+                setUser(() => ({
+                    isLoading: false,
+                    isAuthenticate: false,
+                    token: '',
+                    account: {}
+                }));
+                console.log(user);
+
             }
-        } catch (error: any) {
-            // Xử lý lỗi và điều hướng về trang login nếu gặp lỗi
+        } catch (error) {
             console.error('Error fetching user account:', error);
-            if (error.response && error.response.status === 401) {
-                // Nếu lỗi 401, điều hướng về trang login
-                router.push('/login');
-            } else {
-                // Xử lý các lỗi khác hoặc hiển thị thông báo lỗi chung
-                setUser({ ...defaultUser, isLoading: false });
-            }
+            setUser(() => ({
+                isLoading: false,
+                isAuthenticate: false,
+                token: '',
+                account: {}
+            }));
         }
+        console.log('User state after fetching:', user); // Check state here
     };
+
+
     useEffect(() => {
-        const pathname = window.location.pathname;
+
+        console.log(pathname);
 
         if (pathname === '/') {
-
+            console.log('hit here');
             fetchUserContext();
 
         }
         else if (pathname !== '/login') {
             fetchUserContext();
         }
-    }, []);
+        else {
+            setUser(() => ({
+                isLoading: false,
+                isAuthenticate: false,
+                token: '',
+                account: {}
+            }));
+        }
+    }, [pathname]);
 
     return (
         <UserContext.Provider value={{ user, loginContext, logoutContext }}>

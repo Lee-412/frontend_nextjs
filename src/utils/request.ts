@@ -41,8 +41,15 @@ const handleDeleteUser = (userId: number) => {
 const getUserAccount = () => {
     return axios.get('/account')
 }
+
+const handleLogoutRequest = () => {
+    const respone = axios.post(`/logout`);
+    return respone;
+}
+
 export {
     handleLogin,
+    handleLogoutRequest,
     handleSignUp,
     handleEditUser,
     handleCreateUser,

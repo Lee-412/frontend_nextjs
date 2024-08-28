@@ -17,12 +17,15 @@ import { usePathname, useRouter } from 'next/navigation';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { log } from 'console';
 import { Router } from 'next/router';
+import { handleLogoutRequest } from '@/utils/request';
+
 const logoStyle = {
     width: '140px',
     height: 'auto',
     cursor: 'pointer',
 };
 import { UserContext } from '../userContext/userContext';
+import { isBuffer } from 'util';
 
 interface AppAppBarProps {
     mode: PaletteMode;
@@ -63,24 +66,35 @@ function AppAppBar(props: any) {
         }
 
     }, [user]);
-    console.log(userData);
+    // console.log(userData);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         if (window.confirm('Bạn có muốn đăng xuất không?')) {
-            route.push('/');
-            setUserData({
-                token: '',
-                username: '',
-                email: '',
-                isAuthenticate: false
-            })
-            logoutContext()
+            const resLogout = await handleLogoutRequest();
+
+            // console.log(resLogout);
+            if (resLogout && resLogout.data.EC === '0') {
+                localStorage.removeItem('jwt')
+
+                route.push('/');
+                setUserData({
+                    token: '',
+                    username: '',
+                    email: '',
+                    isAuthenticate: false
+                })
+                logoutContext()
+            }
+            else {
+                alert('Đăng xuất thất bại');
+            }
+
 
         };
 
     }
 
-    console.log(pathname);
+    // console.log(pathname);
 
 
     const handleClickSignUp = () => {
@@ -165,7 +179,7 @@ function AppAppBar(props: any) {
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
-                                    route.push('/about')
+                                    route.push('/role')
                                 }}
                                 sx={{ py: '6px', px: '12px' }}
                             >
