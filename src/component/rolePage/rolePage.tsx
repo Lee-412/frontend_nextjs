@@ -5,8 +5,27 @@ import React, { useState } from 'react'
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import RemoveIcon from '@mui/icons-material/Remove';
+import SnackbarModal, { Severity, SnackbarState } from '../feedback/snackbar';
+import RemoveCircleOutlineSharpIcon from '@mui/icons-material/RemoveCircleOutlineSharp';
+import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp';
+import { handleCreateRole } from '@/utils/roleRequest';
 
 const RolePage = () => {
+
+    const [snackbar, setSnackbar] = useState<SnackbarState>({
+        open: false,
+        message: '',
+        severity: undefined
+    });
+
+    const showSnackbar = (message: string, severity: Severity) => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
     const [roleFormRows, setRoleFormRows] = useState([{ url: '', description: '' }]);
 
     const handleAddNewRole = () => {
@@ -23,18 +42,56 @@ const RolePage = () => {
         setRoleFormRows(updatedRows);
     };
 
-    const handleSubmitAddRole = () => {
-        console.log('Form data:', roleFormRows);
+    const handleSubmitAddRole = async () => {
+        let validate = true;
+        roleFormRows.map((role, index) => {
+
+            if (role.url === '') {
+                // console.log('hit here');
+                showSnackbar(`url ${index} is empty`, 'warning');
+                validate = false
+                return
+            }
+        })
+
+        if (!validate) {
+            return
+        }
+        const res = await handleCreateRole(roleFormRows);
+
+        if (res.data.EC === "0") {
+            showSnackbar(`${res.data.EM}  ${res.data.DT.total} role`, 'success')
+            setRoleFormRows([{ url: '', description: '' }])
+
+        }
+        else if (res.data.EC === "1") {
+            showSnackbar(`${res.data.EM}...`, 'error')
+            setRoleFormRows([{ url: '', description: '' }])
+
+        }
+        else {
+            showSnackbar('Failed to create role', 'error')
+        }
     };
+
+    const fetchDataRole = () => {
+
+    }
+
+
     return (
         <Container>
-
-
 
             <Grid container spacing={2} sx={{ alignItems: 'center', mt: '5vh' }}>
                 {roleFormRows.map((roleForm, index) => (
                     <React.Fragment key={index}>
-                        <Grid item xs={5}>
+                        <Grid item xs={1} sx={{ width: '4%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Typography sx={{ alignItems: 'center', justifyContent: 'center' }}>{index}</Typography>
+                        </Grid>
+
+                        <Grid item xs={4} sx={{}} >
+
+
                             <TextField
                                 label="Url"
                                 value={roleForm.url}
@@ -60,22 +117,22 @@ const RolePage = () => {
                                             index === 0 ?
                                                 <>
                                                     <IconButton aria-label="add" onClick={handleAddNewRole}>
-                                                        <AddCircleOutlinedIcon />
+                                                        <AddCircleOutlineSharpIcon style={{ color: 'green' }} />
                                                     </IconButton>
                                                 </>
                                                 : <>
                                                     <IconButton aria-label="add" onClick={handleAddNewRole}>
-                                                        <AddCircleOutlinedIcon />
+                                                        <AddCircleOutlineSharpIcon style={{ color: 'green' }} />
                                                     </IconButton>
                                                     <IconButton aria-label="remove" onClick={() => handleRemoveRole(index)}>
-                                                        <RemoveIcon />
+                                                        <RemoveCircleOutlineSharpIcon style={{ color: 'red' }} />
                                                     </IconButton>
                                                 </>
                                         }
                                     </>
                                 ) : (
                                     <IconButton aria-label="remove" onClick={() => handleRemoveRole(index)}>
-                                        <RemoveIcon />
+                                        <RemoveCircleOutlineSharpIcon style={{ color: 'red' }} />
                                     </IconButton>
                                 )}
                         </Grid>
@@ -129,6 +186,10 @@ const RolePage = () => {
                     ))}
                 </TableBody>
             </Table>
+            <SnackbarModal
+                snackbar={snackbar}
+                setSnackbar={setSnackbar}
+            />
         </Container>
 
     );

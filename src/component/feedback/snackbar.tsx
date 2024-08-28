@@ -8,7 +8,26 @@ export interface SnackbarState {
     severity: Severity;
 }
 
+/** how to use snackbar
+ * b1: create state snackbar
+ * 
+ *    const [snackbar, setSnackbar] = useState<SnackbarState>({
+        open: false,
+        message: '',
+        severity: undefined
+    });
 
+    const showSnackbar = (message: string, severity: Severity) => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
+ * b2: import snackbar component ( props = {snackbar, setSnackbar})
+ * 
+ */
 const SnackbarModal = (props: any) => {
     const { snackbar, setSnackbar } = props;
 
