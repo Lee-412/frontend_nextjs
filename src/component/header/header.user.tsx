@@ -52,7 +52,7 @@ function AppAppBar(props: any) {
     useEffect(() => {
 
         if (user && user.isAuthenticate === false && pathname !== '/' && pathname !== '/login') {
-            route.push('/login');
+            // route.push('/login');
             console.log("no data");
         }
         else {

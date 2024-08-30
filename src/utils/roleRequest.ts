@@ -14,7 +14,7 @@ const handleCreateRole = (formRolesData: any) => {
 
 
 const handleDeleteRole = (userId: number) => {
-    const response = axios.post(`/users/delete-user`, {
+    const response = axios.post(`/roles/delete-role`, {
         id: userId,
     });
     return response;
@@ -25,10 +25,28 @@ const getListRole = () => {
 
 }
 
+const getRoleWithPagination = (currentPage: number, currentLimit: number) => {
+    console.log(currentLimit, currentPage);
+
+    const response = axios.get(`/roles/get-role?page=${currentPage + 1}&limit=${currentLimit}`)
+    return response;
+}
+
+const handleDeleteMultipleRow = (roleArray: Number[]) => {
+    console.log(roleArray);
+    const response = axios.post(`/roles/delete-role`, {
+        data: roleArray,
+    });
+    return response;
+}
+
+
 export {
 
     handleEditRole,
     handleCreateRole,
     handleDeleteRole,
-    getListRole
+    getListRole,
+    getRoleWithPagination,
+    handleDeleteMultipleRow
 }

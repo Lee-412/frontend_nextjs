@@ -1,4 +1,3 @@
-'use client'
 import Image from "next/image";
 import styles from "./page.module.scss";
 import ImageSlider from "@/component/slider/slider";
@@ -56,8 +55,8 @@ export default function Home() {
     },
   ];
 
-  const { user } = React.useContext(UserContext);
-  console.log(user);
+  // const { user } = React.useContext(UserContext);
+  // console.log(user);
 
   return (
     <>
@@ -70,10 +69,6 @@ export default function Home() {
         <ImageSlider sliderData={slider} />
         <ImageSlider sliderData={slider} />
       </Container>
-
-
-
-
 
     </>
 

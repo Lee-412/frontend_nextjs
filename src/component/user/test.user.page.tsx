@@ -113,7 +113,10 @@ const TestUserBase = () => {
                 message: "Bạn phải đăng nhập với có thể sử dụng chức năng  này.\nHệ thống sẽ đưa bạn tới trang đăng nhập sau vài giây...",
                 severity: 'warning'
             })
-            route.push('/login');
+            setTimeout(() => {
+
+                route.push('/login');
+            }, 2000);
 
         }
         else {
@@ -137,7 +140,6 @@ const TestUserBase = () => {
         }
         else {
             fetchUser();
-
         }
 
     }
